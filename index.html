@@ -6,11 +6,13 @@
 <title>حاسبة السعرات</title>
 <style>
 :root{ --bg: linear-gradient(135deg,#74ebd5,#ACB6E5);} 
-body{font-family:'Segoe UI';background:var(--bg);margin:0;text-align:center}
+body{font-family:'Segoe UI';background: url('./Background.jpeg');background-size: cover;        /* makes image cover whole screen */
+  background-position: center;   /* centers the image */
+  background-repeat: no-repeat;margin:0;text-align:center}
 .container{max-width:450px;margin:20px auto;background:#fff;padding:18px;border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,.2)}
 input,select{width:100%;padding:10px;margin:6px 0;border-radius:10px;border:1px solid #ddd}
 button{width:100%;padding:10px;margin-top:8px;border:none;border-radius:10px;background:#4CAF50;color:#fff;cursor:pointer}
-.reset{background:#f44336}
+.reset{background:#f44336}s
 .results{display:none;margin-top:15px;padding:15px;border-radius:12px;text-align:right}
 canvas{margin-top:10px}
 .footer{margin-top:15px;font-size:13px;color:#333}
@@ -67,10 +69,10 @@ canvas{margin-top:10px}
 
 </div>
 
-<div class="footer">
-<p>إعداد الفرقة الثانية تصنيع غذائي</p>
-<p>كلية الصناعة والطاقة - جامعة 6 أكتوبر التكنولوجية</p>
-<p>تحت إشراف أ.د/ محمد عماد الدين</p>
+<div class="footer" style="background-color: #749aeb; margin: 0; padding: 0;">
+<p style="font-weight: 800; font-size: larger;margin-top: 4px;">إعداد الفرقة الثانية تصنيع غذائي</p>
+<p style="font-weight: 800;font-size: larger;margin-top: 4px;">كلية الصناعة والطاقة - جامعة 6 أكتوبر التكنولوجية</p>
+<p style="font-weight: 800;font-size: larger;margin-bottom: 10px;padding: 3px;">تحت إشراف أ.د/ محمد عماد الدين</p>
 </div>
 
 <script>
@@ -139,15 +141,31 @@ let data=[protein,carbs,fat];
 let colors=['#4caf50','#2196f3','#ff9800'];
 let total=data.reduce((a,b)=>a+b,0);
 let start=0;
-
+let labels = ["Protein", "Carbs", "Fat"];
 for(let i=0;i<data.length;i++){
-let slice=(data[i]/total)*Math.PI*2;
-ctx.beginPath();
-ctx.moveTo(160,110);
-ctx.arc(160,110,80,start,start+slice);
-ctx.fillStyle=colors[i];
-ctx.fill();
-start+=slice;
+let slice = (data[i]/total) * Math.PI * 2;
+
+  // Draw slice
+  ctx.beginPath();
+  ctx.moveTo(160,110);
+  ctx.arc(160,110,80,start,start+slice);
+  ctx.fillStyle = colors[i];
+  ctx.fill();
+
+  // 👉 Calculate middle angle of slice
+  let midAngle = start + slice / 2;
+
+  // 👉 Position text (inside slice)
+  let x = 160 + Math.cos(midAngle) * 50;
+  let y = 110 + Math.sin(midAngle) * 50;
+
+  // 👉 Draw text
+  ctx.fillStyle = "#fff"; // white text (better visibility)
+  ctx.font = "bold 12px Segoe UI";
+  ctx.textAlign = "center";
+  ctx.fillText(labels[i], x, y);
+
+  start += slice;
 }
 
 saveHistory(name,bmi,tdee);
